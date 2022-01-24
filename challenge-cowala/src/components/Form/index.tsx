@@ -79,7 +79,7 @@ const Forms = () => {
                             </FieldP>
                             <FieldC>
                                 <Label>Celular</Label>
-                                <InputPh {...register("phone")} defaultValue={formValues.phone}/>
+                                <InputPh {...register("phone")} mask="(99)9.9999-9999" defaultValue={formValues.phone}/>
                             </FieldC>
                         </FieldPC>
                         <FieldIP>

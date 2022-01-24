@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import InputMask from "react-input-mask";
 
 export const Form = styled.form`
     display: flex;
@@ -93,7 +94,7 @@ export const InputPr = styled.input`
     
 `;
 
-export const InputPh = styled.input`
+export const InputPh = styled(InputMask)`
     
     height: 44px;
     border: 1px solid #ccc;
