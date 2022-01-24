@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import api from '../../services/axios';
 
 import { 
@@ -22,48 +21,46 @@ import {
  } from './styles';
 
 
-type FormData = {
-    name: string;
-    profession: string;
-    phone: string;
-    ip: string;
-};
 
 const Forms = () => {
-  const { register, handleSubmit, reset, setFocus, formState: { errors } } = useForm<FormData>();
-  const onSubmit = handleSubmit(
-    data => localStorage.setItem('formValues', JSON.stringify(data)),
-);  
 
-  const [ formValues , setFormValues ] = useState( JSON.parse(localStorage.getItem('formValues') || '{}') );
-  const [isSafeToReset, setIsSafeToReset] = useState(false);
+    const [ formValues ] = useState( JSON.parse(localStorage.getItem('formValues') || '{}') );
   
+    const [ name, setName ] = useState('');
+    const [ profession, setProfession ] = useState('');
+    const [ phone, setPhone ] = useState('');
+    const [ ip, setIp ] = useState('');
+
+
+    const onSubmit = () => {
+        localStorage.setItem('formValues', JSON.stringify({name, profession, phone, ip}));
+    }
   
   const formCleaner = () => {
-        localStorage.removeItem('formValues');
-        setIsSafeToReset(true);
+        localStorage.clear();
+        setPhone('');
+        setName('');
+        setIp('');
+        setProfession('');
+
     }
 
     const apiGet = async () => {
         const response = await api.get('/');
-        setFormValues({ip: response.data});
-        setFocus('ip');
+        setIp(response.data);
     }
+
+    
 
 
     useEffect(() => {
-        if (isSafeToReset === true) {
-            reset();
-            setIsSafeToReset(false);
-            setFormValues({
-                name: '',
-                profession: '',
-                phone: '',
-                ip: '',
-            });
-            console.log('RODOOOU');
+        if(localStorage.length > 0){
+            setName(formValues.name);
+            setProfession(formValues.profession);
+            setPhone(formValues.phone);
+            setIp(formValues.ip);
         }
-    }, [isSafeToReset]);
+    }, []);
 
 
 
@@ -71,23 +68,22 @@ const Forms = () => {
             <Form onSubmit={onSubmit}>
                 <Fields>
                     <Label>Nome</Label>
-                    <Input {...register("name")} defaultValue={formValues.name}/>
+                    <Input  value={name} onChange={(e) => setName(e.target.value)}/>
                         <FieldPC>
                             <FieldP>
                                 <Label>Profissão</Label>
-                                <InputPr {...register("profession")} defaultValue={formValues.profession}/>
+                                <InputPr  value={profession} onChange={(e) => setProfession(e.target.value)}/>
                             </FieldP>
                             <FieldC>
                                 <Label>Celular</Label>
-                                <InputPh {...register("phone")} mask="(99)9.9999-9999" defaultValue={formValues.phone}/>
+                                <InputPh  mask="(99) 9.9999-9999" value={phone} onChange={(e) => setPhone(e.target.value)}/>
                             </FieldC>
                         </FieldPC>
                         <FieldIP>
                             <FieldI>
                                 <Label>Meu IP</Label>
                                 <Input
-                                    {...register("ip")}
-                                    defaultValue={formValues.ip}
+                                    value={ip}
                                     readOnly
                                 />
                             </FieldI>
